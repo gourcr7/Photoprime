@@ -1,0 +1,2380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="home Page" content="width=device-width, initial-scale=1.0">
+    <title>Photoprime</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
+        body { scroll-behavior: smooth;
+               background: linear-gradient(135deg, #ff9a9e, #fad0c4); }
+
+        /* Header */
+        header {
+            background-color: #ffffff;
+            padding: 1rem 5%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { 
+            font-size: 1.5rem; 
+            font-weight: bold; 
+            color: #333; 
+            display: flex;
+            align-items: center;
+        }
+        .logo img {
+            height: 35px;
+            margin-right: 10px;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+        .nav-links a { 
+            margin-left: 1.5rem; 
+            text-decoration: none;
+            display: block;
+        }
+        .nav-icon {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff9a9e;
+            font-size: 2rem;
+            padding: 20px;
+        }
+
+
+        /* Hero Section */
+        .hero {
+            height: 60vh;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+            url('/api/placeholder/1200/800');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            margin-top: 60px;
+        }
+        .hero h1 { font-size: 3rem; margin-top: 1rem; }
+        .shop-now-btn {
+            background: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 25px;
+            color: black;
+            margin-top: 10px;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            width: 200px;
+            transition: transform 0.3s;
+            font-style: italic;
+        }
+        .shop-now-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Sections */
+        section { padding: 4rem 5%; text-align: center; }
+        #categories{
+            max-width: 500px;
+            margin-bottom: 1px;
+            margin: 20px auto;
+            padding: 20px;
+             background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        #order {
+            max-width: 500px;
+            margin: 5px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            display: none; /* Initially hidden */
+        }
+
+        .form-container {
+            width: 100%;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            margin-top: 15px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .success {
+            display: none;
+            color: #00cc00;
+            padding: 10px;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        /* Image Gallery */
+        #imageGallery {
+            display: none;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: -70px;
+            padding: 20px;
+        }
+
+        .frame-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .frame-card.show { display: block; }
+        .frame-card img { 
+            width: 100%; 
+            height: 200px; 
+            object-fit: cover; 
+            cursor: pointer; /* Add cursor pointer for images */
+        }
+        .frame-info { padding: 15px; }
+        .frame-info h3 { margin: 0 0 10px 0; color: #333; }
+        .frame-info p { margin-top: -5px; font-size: 18px; font-weight: bold; color: #222; }
+        .no-results { text-align: center; grid-column: 1 / -1; padding: 40px; color: #666; display: none; }
+
+        /* Modal for Image Enlargement */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            margin: 20px auto;
+            display: block;
+            max-width: 90%;
+            max-height: calc(100vh - 40px);
+            object-fit: contain;
+            animation: zoom 0.3s;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+        }
+
+        /* Contact Section */
+        #contact {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 30px;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+        
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+        
+        .bten {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .bten:hover {
+            background-color: #007bfa;
+        }
+        
+        .success-message {
+            display: none;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .form-container { width: 90%; }
+            .modal-content { width: 100%; }
+        }
+
+
+        /* Footer Styles */
+        
+        @media (max-width: 768px) {
+            .footer-content {
+                flex-direction: column;
+                gap: 30px;
+                align-items: center;
+            }
+            .footer-section {
+                text-align: center;
+            }
+            .social-links {
+                justify-content: center;
+            }
+        }
+        
+        footer {
+            background: #333;
+            color: white;
+            padding: 10px 5%;
+            text-align: center;
+        }
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .footer-section {
+            flex: 1 1 200px;
+            text-align: left;
+        }
+        .footer-section h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #ff9a9e;
+            padding-bottom: 5px;
+            display: inline-block;
+        }
+        .footer-section p {
+            margin-bottom: 10px;
+        }
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+        .social-links a:hover {
+            color: #ff9a9e;
+        }
+        .copyright {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <!-- Logo SVG - Camera icon with Photoprime text -->
+            <svg width="35" height="35" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M23 19C23 19.5304 22.7893 20.0391 22.4142 20.4142C22.0391 20.7893 21.5304 21 21 21H3C2.46957 21 1.96086 20.7893 1.58579 20.4142C1.21071 20.0391 1 19.5304 1 19V8C1 7.46957 1.21071 6.96086 1.58579 6.58579C1.96086 6.21071 2.46957 6 3 6H7L9 3H15L17 6H21C21.5304 6 22.0391 6.21071 22.4142 6.58579C22.7893 6.96086 23 7.46957 23 8V19Z" stroke="#FF9A9E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="12" cy="13" r="4" stroke="#FF9A9E" stroke-width="2"/>
+            </svg>
+            Photoprime
+        </div>
+        <nav class="nav-links">
+            <a href="#home" title="Home">
+                <div class="nav-icon"><i class="fas fa-home"></i></div>
+            </a>
+            <a href="#categories" title="Categories">
+                <div class="nav-icon"><i class="fas fa-th-large"></i></div>
+            </a>
+            <a href="#contact" title="Contact">
+                <div class="nav-icon"><i class="fas fa-envelope"></i></div>
+            </a>
+        </nav>
+    </header>
+
+    <section class="hero" id="home">
+        <h1>Welcome Photo Premium World</h1>
+        <a href="view.html" class="shop-now-btn">Shop Now</a>
+    </section>
+    <section id="categories">
+        <h2>Search Frame</h2>
+        <div class="form-container">
+            <form id="searchForm" onsubmit="event.preventDefault(); filterImages();">
+                <label>Frame Type:</label>
+                <select id="frameType">
+                    <option value="">Select Frame Type</option>
+                    <option value="Classic Frame">Classic Frame</option>
+                    <option value="Modern Frame">Modern Frame</option>
+                    <option value="Aesthetic Frame">Aesthetic Frame</option>
+                </select>
+
+                <label>Size:</label>
+                <select id="size">
+                    <option value="">Select Size</option>
+                    <option value="6x8 in/15x21 cm">6x8 in/15x21 cm</option>
+                    <option value="8x10 in/ 20x29.7 cm">8x10 in/ 20x29.7 cm</option>
+                    <!-- <option value="12x18">12x18 inches</option> -->
+                </select>
+
+                <button type="submit" class="btn">Search Frames</button>
+            </form>
+        </div>
+    </section>
+    <section>
+        <div id="imageGallery">
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">         
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(1).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (1)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(3).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (3)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(4).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (4)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(6).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (6)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(7).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (7)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(8).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (8)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(26).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (26)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(28).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (28)">Buy Now</button>
+                </div>
+            </div>
+
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(29).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (29)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(31).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (31)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(38).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (38)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(39).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (39)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(40).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (40)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(42).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (42)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(44).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (44)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(46).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (46)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(47).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (47)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(50).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (50)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(57).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (57)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(58).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (58)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(64).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (64)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(66).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (66)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(67).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (67)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(68).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (68)">Buy Now</button>
+                </div>
+            </div>
+
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(77).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (77)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(78).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (78)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(79).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (79)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(84).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (84)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(87).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (87)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(88).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (88)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(93).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (93)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(94).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (94)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(101).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (101)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(103).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (103)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(1).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <p>8x10 in/ 20x29.7 cm - 260 ₹</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (1)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(3).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (3)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(4).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (4)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(6).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (6)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(7).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (7)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(8).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (8)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(26).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (26)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(28).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (28)">Buy Now</button>
+                </div>
+            </div>
+
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(29).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (29)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(31).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (31)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(38).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (38)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(39).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (39)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(40).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (40)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(42).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (42)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(44).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (44)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(46).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (46)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(47).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (47)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(50).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (50)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(57).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (57)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(58).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (58)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(64).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (64)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(66).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (66)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(67).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (67)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(68).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (68)">Buy Now</button>
+                </div>
+            </div>
+
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(77).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (77)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(78).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (78)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(79).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (79)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(84).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (84)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(87).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (87)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(88).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (88)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(93).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (93)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(94).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (94)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(101).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (101)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Classic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(103).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Classic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (103)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(5).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (5)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(9).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (9)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(10).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (10)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(11).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (11)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(12).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (12)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(14).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (14)">Buy Now</button>
+                </div>
+            </div>
+
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(16).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (16)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(17).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (17)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(18).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (18)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(19).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (19)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(21).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (21)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(22).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (22)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(23).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (23)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(24).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (24)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(25).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (25)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(27).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (27)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(30).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (30)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(32).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Framee" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (32)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(33).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (33)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(34).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (34)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(36).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (36)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(37).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (37)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(41).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (41)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(43).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (43)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(48).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (48)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(49).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (49)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(51).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (51)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(53).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (53)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(54).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (54)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(55).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (55)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(56).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (56)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(62).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (62)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(63).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (63)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(65).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (65)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(70).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (70)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(72).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (72)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(74).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (74)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(76).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (76)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(95).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (95)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(102).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (102)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(105).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (105)">Buy Now</button>
+                </div>
+            </div>
+        
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(5).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (5)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(9).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (9)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(10).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (10)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(11).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (11)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(12).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (12)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(14).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (14)">Buy Now</button>
+                </div>
+            </div>
+
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(16).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (16)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(17).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (17)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(18).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (18)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(19).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (19)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(21).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (21)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(22).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (22)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(23).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (23)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(24).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (24)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(25).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (25)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(27).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (27)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(30).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (30)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(32).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Framee" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (32)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(33).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (33)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(34).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (34)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(36).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (36)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(37).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (37)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(41).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (41)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(43).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (43)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(48).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (48)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(49).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (49)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(51).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (51)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(53).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (53)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(54).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (54)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(55).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (55)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(56).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (56)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(62).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (62)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(63).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (63)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(65).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (65)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(70).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (70)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(72).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (72)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(74).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (74)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(76).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (76)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(95).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (95)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(102).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (102)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Modern Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(105).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Modern Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (105)">Buy Now</button>
+                </div>
+            </div>
+            
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(2).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (2)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(13).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (13)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(15).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (15)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(20).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (20)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(35).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (35)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(45).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (45)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(52).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (52)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(59).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (59)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(60).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (60)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(61).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (61)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(69).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (69)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(71).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (71)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(73).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (73)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(75).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (75)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(80).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (80)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(81).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (81)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(82).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (82)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(83).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (53)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(85).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (85)">Buy Now</button>
+                </div>
+            </div>
+
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(86).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (86)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(89).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (89)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(90).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (90)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(91).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (91)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(92).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (92)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(96).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (96)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(97).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (97)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(98).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (98)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(99).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (99)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(100).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (100)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="6x8 in/15x21 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(104).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>6x8 in/15x21 cm<br>₹150</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="6x8 in/15x21 cm" data-frame-price="₹150" data-frame-number="Frame (104)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(2).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (2)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(13).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (13)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(15).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (15)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(20).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (20)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(35).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (35)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(45).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (45)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(52).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (52)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(59).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (59)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(60).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (60)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(61).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (61)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(69).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (69)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(71).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (71)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(73).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (73)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(75).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (75)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(80).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (80)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(81).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (81)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(82).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (82)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(83).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (83)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(85).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (85)">Buy Now</button>
+                </div>
+            </div>
+
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(86).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (86)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(89).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (89)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(90).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (90)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(91).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (91)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(92).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (92)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(96).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (96)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(97).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (97)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(98).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (98)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(99).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (99)">Buy Now</button>
+                </div>
+            </div>
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(100).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (100)">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="frame-card show" data-type="Aesthetic Frame" data-size="8x10 in/ 20x29.7 cm">
+                <img src="https://github.com/gourcr7/Photoprime/blob/main/Frame%20(104).jpg" alt="Black Frame">
+                <div class="frame-info">
+                    <br><p>8x10 in/ 20x29.7 cm<br>₹260</p>
+                    <button class="btn buy-btn" data-frame-type="Aesthetic Frame" data-frame-size="8x10 in/ 20x29.7 cm" data-frame-price="₹260" data-frame-number="Frame (104)">Buy Now</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        <!-- Modal for Image Enlargement -->
+        <div id="myModal" class="modal">
+            <span class="close">&times;</span>
+            <img class="modal-content" id="expandedImg">
+        </div>
+    
+
+    <!-- Updated Order Section -->
+    <section id="order">
+        <div class="form-container">
+            <a href="#" class="back-btn" id="backButton">← Back</a>
+            <h2>Custom Frame Order</h2>
+            <form id="orderForm" onsubmit="submitForm(event)">
+                <label>Order Date:</label>
+                <input type="date" id="order_date" required>
+
+                <label>Full Name:</label>
+                <input type="text" id="full_name" required>
+
+                <label>Shop Name:</label>
+                <input type="text" id="phone" required>
+
+                <label>Frame Number:</label>
+                <input type="text" id="frame" readonly>
+
+                <label>Frame Type:</label>
+                <select id="frame_type">
+                    <option>Classic Frame</option>
+                    <option>Modern Frame</option>
+                    <option>Aesthetic Frame</option>
+                </select>
+
+                <label>Size:</label>
+                <select id="size_select">
+                    <!-- <option>4x6 inches</option> -->
+                    <option>6x8 in/15x21 cm</option>
+                    <option>8x10 in/ 20x29.7 cm</option>
+                    <!-- <option>12x18 inches</option> -->
+                </select>
+
+                <label>Frame Price:</label>
+                <input type="text" id="frame_price" readonly>
+
+                <label>Special Instructions:</label>
+                <textarea id="special_instructions"></textarea>
+
+                <div class="success" id="form-success">
+                    Order details ready to send! Click the button below to continue to WhatsApp.
+                </div>
+
+                <button type="submit" class="btn">Send Order</button>
+            </form>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2>Contact Us</h2>
+        <div class="form-container">
+            <form id="contactForm">
+                <label for="name">Name:</label>
+                <input type="text" id="name" required>
+                
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+                
+                <label for="message">Message:</label>
+                <textarea id="message" required></textarea>
+                
+                <button type="submit" class="bten">Send Message</button>
+            </form>
+            <div id="successMessage" class="success-message">
+                Thank you for your message! We will get back to you soon.
+            </div>
+        </div>
+    </section>
+
+
+    <footer>
+<!--         <div class="footer-content">
+            <div class="footer-section">
+                <h3>About Photoprime</h3>
+                <p>We specialize in high-quality, elegant photo frames that enhance your precious memories.</p>
+                <p>Established in 2024, we've helped thousands of customers showcase their moments beautifully.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <p><a href="#home" style="color: white; text-decoration: none;">Home</a></p>
+                <p><a href="#categories" style="color: white; text-decoration: none;">Categories</a></p>
+                <p><a href="#contact" style="color: white; text-decoration: none;">Contact</a></p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Champahati, Sonarpur, south 24 pgs.</p>
+                <p><i class="fas fa-phone"></i> +91 9635242398</p>
+                <p><i class="fas fa-envelope"></i> sardarsagar589@gmail.com</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-pinterest"></i></a>
+                </div>
+            </div>
+        </div> -->
+        <div class="copyright">
+            <p>&copy; 2025 Photoprime. All Rights Reserved.</p>
+            <p><i class="fas fa-phone"></i> +91 9635242398</p>
+            <p><i class="fas fa-envelope"></i> sardarsagar589@gmail.com</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // Frame filtering
+        function filterImages() {
+            const frameType = document.getElementById('frameType').value;
+            const size = document.getElementById('size').value;
+            const gallery = document.getElementById('imageGallery');
+            const cards = document.querySelectorAll('.frame-card');
+            const noResults = document.querySelector('.no-results');
+
+            if (!frameType || !size) {
+                alert('Please select both frame type and size');
+                return;
+            }
+
+            gallery.style.display = 'grid';
+            let hasResults = false;
+
+            cards.forEach(card => {
+                const matchesType = card.dataset.type === frameType;
+                const matchesSize = card.dataset.size === size;
+
+                if (matchesType && matchesSize) {
+                    card.classList.add('show');
+                    hasResults = true;
+                } else {
+                    card.classList.remove('show');
+                }
+            });
+
+            if (!hasResults && !noResults) {
+                const noResultsElement = document.createElement('div');
+                noResultsElement.className = 'no-results';
+                noResultsElement.textContent = 'No frames found matching your criteria.';
+                gallery.appendChild(noResultsElement);
+            } else if (noResults) {
+                noResults.style.display = hasResults ? 'none' : 'block';
+            }
+        }
+
+        // Buy Button Click Handler - Show Order Form
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add event listeners to all Buy Now buttons
+            const buyButtons = document.querySelectorAll('.buy-btn');
+            buyButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Get data from the button attributes
+                    const frameType = this.getAttribute('data-frame-type');
+                    const frameSize = this.getAttribute('data-frame-size');
+                    const framePrice = this.getAttribute('data-frame-price');
+                    const frameNumber = this.getAttribute('data-frame-number');
+                    
+                    // Set current date as default
+                    const today = new Date().toISOString().split('T')[0];
+                    document.getElementById('order_date').value = today;
+                    
+                    // Pre-select the frame type and size in the order form
+                    const frameTypeSelect = document.getElementById('frame_type');
+                    const frameSizeSelect = document.getElementById('size_select');
+                    
+                    // Set the frame number and price
+                    document.getElementById('frame').value = frameNumber;
+                    document.getElementById('frame_price').value = framePrice;
+                    
+                    // Set the selected options
+                    for(let i = 0; i < frameTypeSelect.options.length; i++) {
+                        if(frameTypeSelect.options[i].text === frameType) {
+                            frameTypeSelect.selectedIndex = i;
+                            break;
+                        }
+                    }
+                    
+                    for(let i = 0; i < frameSizeSelect.options.length; i++) {
+                        if(frameSizeSelect.options[i].text === frameSize) {
+                            frameSizeSelect.selectedIndex = i;
+                            break;
+                        }
+                    }
+                    
+                    // Show the order section and scroll to it
+                    document.getElementById('order').style.display = 'block';
+                    document.getElementById('order').scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+
+            // Get URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const openOrder = urlParams.get('openOrder');
+            
+            // Check if we should open the order form
+            if (openOrder === 'true') {
+                const frameType = urlParams.get('frameType');
+                const frameSize = urlParams.get('frameSize');
+                const framePrice = urlParams.get('framePrice');
+                const frameNumber = urlParams.get('frameNumber');
+                
+                // Set current date as default
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('order_date').value = today;
+                
+                // Set the frame number and price
+                if (frameNumber) {
+                    document.getElementById('frame').value = frameNumber;
+                }
+                
+                if (framePrice) {
+                    document.getElementById('frame_price').value = framePrice;
+                }
+                
+                // Pre-select the frame type and size in the order form
+                if (frameType && frameSize) {
+                    const frameTypeSelect = document.getElementById('frame_type');
+                    const frameSizeSelect = document.getElementById('size_select');
+                    
+                    // Set the selected options
+                    for(let i = 0; i < frameTypeSelect.options.length; i++) {
+                        if(frameTypeSelect.options[i].text === frameType) {
+                            frameTypeSelect.selectedIndex = i;
+                            break;
+                        }
+                    }
+                    
+                    for(let i = 0; i < frameSizeSelect.options.length; i++) {
+                        if(frameSizeSelect.options[i].text === frameSize) {
+                            frameSizeSelect.selectedIndex = i;
+                            break;
+                        }
+                    }
+                }
+                
+                // Show the order section and scroll to it
+                document.getElementById('order').style.display = 'block';
+                
+                // Wait for the page to fully load before scrolling
+                setTimeout(() => {
+                    document.getElementById('order').scrollIntoView({ behavior: 'smooth' });
+                }, 500);
+            }
+        });
+
+        // Back Button Functionality
+        document.getElementById('backButton').addEventListener('click', function(e) {
+            e.preventDefault();
+            // Hide the order form
+            document.getElementById('order').style.display = 'none';
+            // Scroll back to categories
+            document.getElementById('categories').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Updated Form Handling
+        function submitForm(event) {
+            event.preventDefault();
+            const orderDetails = {
+                orderDate: document.getElementById("order_date").value,
+                name: document.getElementById("full_name").value,
+                phone: document.getElementById("phone").value,
+                frame: document.getElementById("frame").value,
+                frameType: document.getElementById("frame_type").value,
+                size: document.getElementById("size_select").value,
+                price: document.getElementById("frame_price").value,
+                instructions: document.getElementById("special_instructions").value
+            };
+
+            if (!orderDetails.orderDate || !orderDetails.name || !orderDetails.phone) {
+                alert("Please fill in all required fields");
+                return;
+            }
+
+            setTimeout(() => {
+                const message = `New Order!\n📅 Date: ${orderDetails.orderDate}\n👤 Name: ${orderDetails.name}\n🏪 Shop Name: ${orderDetails.phone}\n🔢 Frame Number: ${orderDetails.frame}\n🖼️ Type: ${orderDetails.frameType}\n📏 Size: ${orderDetails.size}\n💰 Price: ${orderDetails.price}\n📝 Instructions: ${orderDetails.instructions || 'None'}`;
+                const phoneNumber = "919635242398"; // With country code
+                const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+                window.open(whatsappURL, "_blank");
+                document.getElementById("orderForm").reset();
+                document.getElementById("form-success").style.display = "none";
+                document.getElementById('order').style.display = 'none';
+            }, 1000);
+        }
+
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            
+            // Create data object
+            const formData = {
+                name: name,
+                email: email,
+                message: message,
+                recipient: "sagarsardarcr7@gmail.com"
+            };
+            
+            
+            // For demo purposes, just show the success message
+            document.getElementById('contactForm').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'block';
+            
+            // Email content that would be sent to sardarsagar589@gmail.com
+            console.log("New message from Photoprime website:");
+            console.log("From: " + name + " (" + email + ")");
+            console.log("Message: " + message);
+        });
+
+        // Image enlargement functionality
+        const modal = document.getElementById("myModal");
+        const modalImg = document.getElementById("expandedImg");
+        const closeBtn = document.getElementsByClassName("close")[0];
+
+        // Add click event to all frame images
+        document.querySelectorAll('.frame-card img').forEach(img => {
+            img.onclick = function() {
+                modal.style.display = "block";
+                modalImg.src = this.src;
+            }
+        });
+
+        // Close modal
+        closeBtn.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // Close when clicking outside image
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Initial setup
+        window.onload = function() {
+            document.getElementById('imageGallery').style.display = 'none';
+            // Order section display is now controlled by parameter handling in DOMContentLoaded
+        };
+    </script>
+</body>
+</html>
