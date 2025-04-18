@@ -1399,7 +1399,7 @@ const modalImg = document.getElementById("expandedImg");
 const span = document.getElementsByClassName("close")[0];
 
 // Add click event to all frame images
-document.querySelectorAll('.frame img').forEach(img => {
+document.querySelectorAll('.frame img,.gallery-item img').forEach(img => {
     img.addEventListener('click', function() {
         modal.style.display = "block";
         modalImg.src = this.src;
